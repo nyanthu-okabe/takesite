@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <title>たけぽん君</title>
+        <style>
+            html {
+                scroll-behavior: smooth;
+            }
+
+            section {
+                scroll-margin-top: 60px;
+            }
+
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+            }
+            .hero {
+                background-image: url("https://www.kk-bestsellers.com/wp-content/uploads/mwimgs/0/a/-/img_0a6c178c763fb74b21a94fa25895f4a331693.jpg");
+                background-size: cover;
+                background-position: center;
+                padding: 70px;
+                text-align: center;
+                color: darkred;
+                font-size: 30px;
+            }
+            main {
+                padding: 10px;
+            }
+            button {
+                background-color: #ffffff;
+                border: 1px solid #ccc;
+                padding: 8px 15px;
+                cursor: pointer;
+                font-weight: bold;
+                margin-right: 5px;
+                transition: 0.15s;
+            }
+
+            button:hover {
+                background-color: #e9e9e9;
+            }
+
+            nav {
+                background: #111;
+                color: #fff;
+                padding: 0 24px;
+                height: 56px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .nav-left {
+                font-weight: bold;
+                font-size: 18px;
+            }
+
+            .nav-right {
+                display: flex;
+                gap: 16px;
+            }
+
+            .nav-right a,
+            .nav-left a {
+                color: #ddd;
+                text-decoration: none;
+                font-size: 14px;
+            }
+
+            .nav-right a:hover {
+                color: #fff;
+            }
+        </style>
+    </head>
+    <body>
+        <nav>
+            <div class="nav-left"><a href="#home">Takepon君</a></div>
+            <div class="nav-right">
+                <a href="#home">Home</a>
+                <a href="#download">Download</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </nav>
+        <main>
+            <div class="hero">
+                <h1>Takepon</h1>
+                <p>新しい人間じゃない話し相手</p>
+            </div>
+            <section id="home">
+                <h2>Home</h2>
+                <p>
+                    担当: <strong>n_okabe</strong><br />
+                    Nyanthu.comのプロジェクトです<br />
+                    Takepon君 edge-addon<br />
+                    2026/01/12 公開<br />
+                    新しい人間じゃない話し相手だよ!!<br />
+                    友達がいない君が対象だよ!!<br />
+                    ぜひ使ってみて
+                </p>
+            </section>
+            <section id="download">
+                <h2>Download</h2>
+                <p>
+                    Download The TAKEPON-ADDON<br />
+                    for Chrome / Edge
+                </p>
+                <button id="download">Takepon君(1.0.0) をダウンロード</button>
+                <p>
+                    Zipでダウンロードされるから解凍して使って<br />
+                    解凍したら拡張機能からDeveloper modeにして<br />フォルダを選択してね
+                </p>
+            </section>
+
+            <section id="contact">
+                <h2>Contact</h2>
+                <p>
+                    連絡先:
+                    <a href="mailto:contact@nyanthu.com">contact@nyanthu.com</a>
+                </p>
+            </section>
+            <hr />
+            <footer><p>© Nyanthu.com 2026</p></footer>
+        </main>
+
+        <!-- JSZip -->
+        <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+        <script>
+            const addonFiles = [
+                "addon/background.js",
+                "addon/manifest.json",
+                "addon/content.js",
+                "addon/popup.html",
+                // ↑ addon/ 配下のファイルを全部書く
+            ];
+
+            document.getElementById("download").onclick = async () => {
+                const zip = new JSZip();
+                const folder = zip.folder("addon");
+
+                for (const path of addonFiles) {
+                    const res = await fetch(path);
+                    if (!res.ok) {
+                        alert(path + " の取得に失敗したで");
+                        return;
+                    }
+                    const data = await res.blob();
+                    const name = path.replace("addon/", "");
+                    folder.file(name, data);
+                }
+
+                const blob = await zip.generateAsync({ type: "blob" });
+
+                const a = document.createElement("a");
+                a.href = URL.createObjectURL(blob);
+                a.download = "addon.zip";
+                a.click();
+
+                URL.revokeObjectURL(a.href);
+            };
+        </script>
+    </body>
+</html>
