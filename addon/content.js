@@ -64,12 +64,17 @@ document.head.appendChild(style);
 
 // --- HTML ---
 const html = document.createElement("div");
+let tekeponusername;
+chrome.storage.local.get(["username"], (result) => {
+  tekeponusername = result.username;
+});
+
 html.innerHTML = `
 <label class="reject" style="bottom: 10px; left: 10px; position: fixed; z-index: 999999;" for="pop-up"><strong>Takepon</strong></label>
 <input type="checkbox" id="pop-up" >
 <div class="overlay">
     <div class="window">
-        <h4>Takepon Addon</h4>
+        <h4>${tekeponusername}さんこんにちは！</h4>
 
 	<img style="width: 300px; height: auto" src="https://www.kk-bestsellers.com/wp-content/uploads/mwimgs/0/a/-/img_0a6c178c763fb74b21a94fa25895f4a331693.jpg">
 
